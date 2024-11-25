@@ -16,21 +16,30 @@ const catchError = (err, res) => {
 };
 
 const verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
+  // Lấy token từ header Authorization
+  let token = req.headers["authorization"]; // Chú ý là chữ "a" trong 'authorization' có thể viết in thường, không phân biệt chữ hoa chữ thường trong header HTTP
 
   if (!token) {
     return res.status(403).send({ message: "No token provided!" });
   }
+
+  // Nếu có token, loại bỏ "Bearer " ở đầu
+  token = token.split(" ")[1]; // Loại bỏ từ "Bearer " trước token, nếu có
+
+  // Xác thực token với secret key
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
+      // Nếu token không hợp lệ hoặc hết hạn, trả về lỗi
       return catchError(err, res);
     }
+
+    // Lưu thông tin người dùng vào request
     req.userId = decoded.id;
-    next();
+    next(); // Tiếp tục đến middleware tiếp theo
   });
 };
 
-isAdmin = (req, res, next) => {
+const isAdmin = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
     if (err) {
       res.status(500).send({ message: err });
@@ -61,7 +70,7 @@ isAdmin = (req, res, next) => {
   });
 };
 
-isModerator = (req, res, next) => {
+const isModerator = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
     if (err) {
       res.status(500).send({ message: err });

@@ -2,7 +2,6 @@ const BookModel = require("../models/book.model");
 const createBook = async (req, res) => {
   try {
     // let imageUrl = req.file ? req.file.path : ""; // Lấy URL hình ảnh đã upload lên Cloudinary
-
     const {
       book_name,
       category,
@@ -14,7 +13,6 @@ const createBook = async (req, res) => {
       countInStock,
       description,
     } = req.body;
-
     // Validate dữ liệu
     if (
       !book_name ||
@@ -61,7 +59,7 @@ const getAllBooks = async (req, res) => {
         sortOptions.price = sortOrder === "desc" ? -1 : 1;
         break;
       case "name":
-        sortOptions.name = sortOrder === "desc" ? -1 : 1;
+        sortOptions.book_name = sortOrder === "desc" ? -1 : 1;
         break;
       default:
         sortOptions.createdAt = -1;
@@ -83,8 +81,8 @@ const getAllBooks = async (req, res) => {
     const data = await BookModel.find(query)
       .skip(elementsPass)
       .limit(PAGE_SIZE)
-      .sort(sortOptions);
-
+      .sort(sortOptions)
+      .populate("category", "category_name");
     // const page = parseInt(req.query.page) || 1; pageNumber
     // const itemsPerPage = parseInt(req.query.itemsPerPage) || 8; LIMIT
     const totalItems = await BookModel.countDocuments();

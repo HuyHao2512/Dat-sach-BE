@@ -1,5 +1,5 @@
 module.exports = {
   secret: "Huyhao-secret-key",
-  jwtExpiration: 3600, // 1 hour
+  jwtExpiration: 7200, // 2 hour
   jwtRefreshExpiration: 86400,
 };

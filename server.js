@@ -3,10 +3,10 @@ const cors = require("cors");
 const dbConfig = require("./app/config/db.config");
 
 const app = express();
-const Book = require("./app/models/book.model");
-const Order = require("./app/models/order.model");
-const Cart = require("./app/models/cart.model");
-const Category = require("./app/models/category.model");
+// const Book = require("./app/models/book.model");
+// const Order = require("./app/models/order.model");
+// const Cart = require("./app/models/cart.model");
+// const Category = require("./app/models/category.model");
 const bodyParser = require("body-parser");
 const cloudinary = require("./app/config/cloudinary");
 const multer = require("multer");
@@ -47,14 +47,14 @@ app.post("/upload", upload.single("file"), (req, res) => {
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-const categoryRouter = require("./app/routes/categoryRoutes");
-app.use("/api/category", categoryRouter);
-const bookRouter = require("./app/routes/bookRoutes");
-app.use("/api/book", bookRouter);
-const cartRouter = require("./app/routes/cartRoutes");
-app.use("/api/cart", cartRouter);
-const orderRouter = require("./app/routes/orderRoutes");
-app.use("/api/order", orderRouter);
+// const categoryRouter = require("./app/routes/categoryRoutes");
+// app.use("/api/category", categoryRouter);
+// const bookRouter = require("./app/routes/bookRoutes");
+// app.use("/api/book", bookRouter);
+// const cartRouter = require("./app/routes/cartRoutes");
+// app.use("/api/cart", cartRouter);
+// const orderRouter = require("./app/routes/orderRoutes");
+// app.use("/api/order", orderRouter);
 const db = require("./app/models");
 const Role = db.role;
 
@@ -80,7 +80,10 @@ app.get("/", (req, res) => {
 // routes
 require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
-
+require("./app/routes/cartRoutes")(app);
+require("./app/routes/categoryRoutes")(app);
+require("./app/routes/orderRoutes")(app);
+require("./app/routes/bookRoutes")(app);
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

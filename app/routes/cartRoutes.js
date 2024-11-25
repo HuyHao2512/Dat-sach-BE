@@ -1,16 +1,33 @@
-const express = require("express");
-const {
-  addItemToCart,
-  removeItemFromCart,
-  updateItemInCart,
-  getAllCartItemByUserId,
-  removeUserCart,
-} = require("../controllers/cart.controller");
+const { authJwt } = require("../middlewares");
+const controller = require("../controllers/cart.controller");
 
-const router = express.Router();
-router.get("/user/:userId", getAllCartItemByUserId);
-router.post("/addtocart", addItemToCart);
-router.delete("/removecart", removeItemFromCart);
-router.put("/user/:userId", updateItemInCart);
-router.post("/removecart", removeUserCart);
-module.exports = router;
+module.exports = function (app) {
+  app.post(
+    "/api/cart/addtocart",
+    [authJwt.verifyToken],
+    controller.addItemToCart
+  );
+
+  app.get(
+    "/api/cart/user/:userId",
+    [authJwt.verifyToken],
+    controller.getAllCartItemByUserId
+  );
+
+  app.put(
+    "/api/cart/user/:userId",
+    [authJwt.verifyToken],
+    controller.updateItemInCart
+  );
+
+  app.delete(
+    "/api/cart/removecart",
+    [authJwt.verifyToken],
+    controller.removeItemFromCart
+  );
+  app.delete(
+    "/api/cart/removeusercart",
+    [authJwt.verifyToken],
+    controller.removeUserCart
+  );
+};
